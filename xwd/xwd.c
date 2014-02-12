@@ -1,5 +1,3 @@
-/* $Xorg: xwd.c,v 1.5 2001/02/09 02:06:03 xorgcvs Exp $ */
-
 /*
 
 Copyright 1987, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86: xc/programs/xwd/xwd.c,v 3.11 2002/09/16 18:06:21 eich Exp $ */
 
 /*
  * xwd.c MIT Project Athena, X Window system window raster image dumper.
@@ -114,15 +111,26 @@ static int ReadColors(Visual *, Colormap, XColor **);
 
 static long parse_long (char *s)
 {
-    char *fmt = "%lu";
     long retval = 0L;
     int thesign = 1;
 
     if (s && s[0]) {
-	if (s[0] == '-') s++, thesign = -1;
-	if (s[0] == '0') s++, fmt = "%lo";
-	if (s[0] == 'x' || s[0] == 'X') s++, fmt = "%lx";
-	(void) sscanf (s, fmt, &retval);
+	switch(s[0]) {
+	    case '-':
+		(void) sscanf (s + 1, "%lu", &retval);
+        	thesign = -1;
+		break;
+	    case '0':
+		(void) sscanf (s + 1, "%lo", &retval);
+		break;
+	    case 'x':
+	    case 'X':
+		(void) sscanf (s + 1, "%lx", &retval);
+		break;
+	    default:
+		(void) sscanf (s, "%lu", &retval);
+		break;
+	}
     }
     return (thesign * retval);
 }
@@ -250,7 +258,6 @@ Window_Dump(Window window, FILE *out)
     int absx, absy, x, y;
     unsigned width, height;
     int dwidth, dheight;
-    int bw;
     Window dummywin;
     XWDFileHeader header;
     XWDColor xwdcolor;
@@ -298,14 +305,12 @@ Window_Dump(Window window, FILE *out)
     win_info.y = absy;
     width = win_info.width;
     height = win_info.height;
-    bw = 0;
 
     if (!nobdrs) {
 	absx -= win_info.border_width;
 	absy -= win_info.border_width;
-	bw = win_info.border_width;
-	width += (2 * bw);
-	height += (2 * bw);
+	width += (2 * win_info.border_width);
+	height += (2 * win_info.border_width);
     }
     dwidth = DisplayWidth (dpy, screen);
     dheight = DisplayHeight (dpy, screen);

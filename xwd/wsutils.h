@@ -1,4 +1,3 @@
-/* $Xorg: wsutils.h,v 1.4 2001/02/09 02:06:03 xorgcvs Exp $ */
 /** ------------------------------------------------------------------------
 	This file contains routines for manipulating generic lists.
 	Lists are implemented with a "harness".  In other words, each
@@ -34,7 +33,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
     ------------------------------------------------------------------------ **/
-/* $XFree86$ */
 
 /******************************************************************************
  *
@@ -51,7 +49,7 @@ typedef struct
   VisualID	visualID;		/* The VisualID of the overlay visual */
   int		transparentType;	/* Can be None, TransparentPixel or
 					 * TransparentMask */
-  int		value;			/* Pixel value */
+  Pixel		value;			/* Pixel value */
   int		layer;			/* Overlay planes will always be in
 					 * layer 1 */
 } OverlayVisualPropertyRec;
@@ -67,7 +65,7 @@ typedef struct
   XVisualInfo	*pOverlayVisualInfo;	/* Pointer to the XVisualInfo struct */
   int		transparentType;	/* Can be None, TransparentPixel or
 					 * TransparentMask */
-  int		value;			/* Pixel value */
+  Pixel		value;			/* Pixel value */
   int		layer;			/* Overlay planes will always be in
 					 * layer 1 */
 } OverlayInfo;

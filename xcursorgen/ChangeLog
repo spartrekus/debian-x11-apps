@@ -1,3 +1,188 @@
+commit 1edaf53856983391b05d3a488acc0b6cc257a401
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Mar 22 21:54:00 2012 -0700
+
+    xcursorgen 1.0.5
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 5610c2cca68228c1ce8fa5006021e7859e632cf5
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Tue Feb 14 19:53:55 2012 -0800
+
+    Fix -image argument parsing to not shadow "i" variable
+    
+    Also avoids starting at the wrong argument if -image is not the first
+    flag passed to xcompmgr (though that's not really supported in the
+    current syntax).
+    
+    Fixes gcc warning:
+    xcursorgen.c: In function `main':
+    xcursorgen.c:394: warning: declaration of 'i' shadows a previous local
+    xcursorgen.c:377: warning: shadowed declaration is here
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+    Reviewed-by: Jeremy Huddleston <jeremyhu@apple.com>
+
+commit 471a4ef735fae193305b29484975e0201fc00a4f
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Sep 28 20:40:40 2011 -0700
+
+    Add const attributes to fix gcc -Wwrite-strings warnings
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit dc2354cdd2e7ad247dd2a3e456c90a40095b98ee
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Sep 28 20:36:25 2011 -0700
+
+    Remove old XFree86 CVS id
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 4acc916ea1aa2a651f600f135ebd743add4e486b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Wed Sep 28 20:36:04 2011 -0700
+
+    Strip trailing whitespace
+    
+    Performed with: find * -type f | xargs perl -i -p -e 's{[ \t]+$}{}'
+    git diff -w & git diff -b show no diffs from this change
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 512e7a8e82c42add636fbf13d13df854290a35f7
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jan 19 10:06:56 2011 -0500
+
+    config: move man pages into their own directory
+    
+    Use services provided by XORG_MANPAGE_SECTIONS.
+    Use standard Makefile for man pages.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 667b2259b41152f4146b28677d464b7d47ef6bac
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jan 12 16:28:02 2011 -0500
+
+    config: replace deprecated AM_CONFIG_HEADER with AC_CONFIG_HEADERS
+    
+    This silences an Autoconf warning
+
+commit bd5c027d923351ea8ef541a6d5092ba9e8661f6c
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Sep 23 19:41:07 2010 -0700
+
+    xcursorgen 1.0.4
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit b848ae7bbd9d328fa8115707153a92414b302753
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Thu Sep 23 19:38:42 2010 -0700
+
+    config: Remove unnecessary calls from configure.ac
+    
+    AC_PROG_CC & AC_PROG_INSTALL are provided by XORG_DEFAULT_OPTIONS now
+    PKG_CONFIG_MODULES handles AC_SUBST of the CFLAGS & LIBS variables
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 4768df2f3051a92dc351a4072d2232ffd9304eb0
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Tue Jul 20 18:45:18 2010 -0400
+
+    config: update AC_PREREQ statement to 2.60
+    
+    Unrelated to the previous patches, the new value simply reflects
+    the reality that the minimum level for autoconf to configure
+    all x.org modules is 2.60 dated June 2006.
+    
+    ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit be56a72e4afc0ba6599fb862f2b527fa49afbf82
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Sun Aug 8 21:45:54 2010 -0500
+
+    Use AC_PROG_SED and MAN_SUBSTS in macros-1.8
+    
+    Tested-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+commit 0aa3f45edaddd3deef9845ed290518ebb91e22c0
+Author: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+Date:   Sun Aug 8 21:45:53 2010 -0500
+
+    Remove INSTALL from git
+    
+    The INSTALL file is added to the tarball by XORG_INSTALL.
+    
+    Tested-by: Gaetan Nadon <memsize@videotron.ca>
+    Signed-off-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+
+commit 9e7c41e0e16183110cd7b28d012a0bb69aed4655
+Author: Cody Maloney <cmaloney@theoreticalchaos.com>
+Date:   Sun Mar 14 00:07:23 2010 -0800
+
+    Upgraded to work with libpng14
+    
+    setjmp(png_ptr->jmpbuf) is depreceated so removed it and changed the
+    configure.ac version number to accept libpng12 or libpng14
+    
+    Signed-off-by: Cody Maloney <cmaloney@theoreticalchaos.com>
+    Tested-by: Yaakov Selkowitz <yselkowitz@users.sourceforge.net>
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 194d9a4353dbf0b4c1d2895e60966bbc4429c54d
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Nov 26 09:19:53 2009 -0500
+
+    Makefile.am: add ChangeLog and INSTALL on MAINTAINERCLEANFILES
+    
+    Now that the INSTALL file is generated.
+    Allows running make maintainer-clean.
+
+commit a8cd9706d08c02a947db00f391dc753a7d8167e0
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Oct 28 14:09:08 2009 -0400
+
+    INSTALL, NEWS, README or AUTHORS files are missing/incorrect #24206
+    
+    Add missing INSTALL file. Use standard GNU file on building tarball
+    README may have been updated
+    Remove AUTHORS file as it is empty and no content available yet.
+    Remove NEWS file as it is empty and no content available yet.
+
+commit 763593472fd31103f63afa90d4405643d90fc79e
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Mon Oct 26 22:08:38 2009 -0400
+
+    Makefile.am: ChangeLog not required: EXTRA_DIST or *CLEANFILES #24432
+    
+    ChangeLog filename is known to Automake and requires no further
+    coding in the makefile.
+
+commit 821f55410152bfa8b7e8e3c9ee809e1835db9e2f
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Oct 22 12:34:15 2009 -0400
+
+    .gitignore: use common defaults with custom section # 24239
+    
+    Using common defaults will reduce errors and maintenance.
+    Only the very small or inexistent custom section need periodic maintenance
+    when the structure of the component changes. Do not edit defaults.
+
+commit db68e86e2d2d058e178598a46f6237f9762e4fd3
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Sun Sep 27 16:02:01 2009 -0400
+
+    Makefile.am: do not include autogen.sh in distribution #24183
+    
+    This is a private build script that should not be distributed
+
 commit 32dc0bbbd067bfe27f506a510da3c5344964ee23
 Author: Alan Coopersmith <alan.coopersmith@sun.com>
 Date:   Fri Oct 16 17:41:51 2009 -0700

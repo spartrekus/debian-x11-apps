@@ -14,7 +14,7 @@ include debian/xsfbs/xsfbs.mk
 
 # This package contains multiple modules as shipped by upstream. Each module is # contained in a subdirectory in the root dir of the package. You must list each
 # subdirectory explicitly so that the build system knows what to build
-DEF_SUBDIRS=bitmap ico oclock x11perf xbiff xcalc xclipboard xclock xconsole xcursorgen xditview xedit xeyes xgc xload xlogo xmag xman xmore xwd xwud
+DEF_SUBDIRS=bitmap ico oclock transset x11perf xbiff xcalc xclipboard xclock xconsole xcursorgen xditview xedit xeyes xgc xload xlogo xmag xman xmore xwd xwud
 SUBDIRS=$(DEF_SUBDIRS)
 BUILD_STAMPS = $(addprefix $(STAMP_DIR)/build-,$(SUBDIRS))
 
@@ -48,25 +48,19 @@ $(STAMP_DIR)/build-%: $(STAMP_DIR)/genscripts $(STAMP_DIR)/patch
 	cd $*-build && \
 	../$*/configure --prefix=/usr --mandir=\$${prefix}/share/man \
 	  --infodir=\$${prefix}/share/info $(confflags) \
-	  --disable-xprint \
-	  --with-sysmanpath=/usr/man:/usr/share/man:/usr/local/man:/usr/local/share/man:/usr/X11R6/man:/opt/man \
 	  CFLAGS="$(CFLAGS)" \
-	  RSH=rsh \
 	  MANCONF="/etc/manpath.config"
 	cd $*-build && $(MAKE)
 	>$@
 
 clean: xsfclean
 	dh_testdir
-	dh_testroot
 	rm -f build-stamp
-
 	rm -f config.cache config.log config.status
 	rm -f */config.cache */config.log */config.status
 	rm -f conftest* */conftest*
 	rm -rf autom4te.cache */autom4te.cache
 	rm -rf *-build
-
 	dh_clean
 
 install: build
@@ -111,4 +105,4 @@ get-tarballs: $(addprefix get-tarball-,$(SUBDIRS))
 
 .PHONY: get-tarball-%
 get-tarball-%:
-	uscan --no-conf --download --no-symlink --package $* --upstream-version $(shell awk -F = '/^PACKAGE_VERSION=/ { print $$2 }' < $*/configure ) --watchfile debian/watch.$* || test $$? = 1
+	uscan --no-conf --destdir . --download --no-symlink --package $* --upstream-version $(shell awk -F = '/^PACKAGE_VERSION=/ { print $$2 }' < $*/configure ) --watchfile debian/watch.$* || test $$? = 1

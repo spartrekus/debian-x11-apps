@@ -19,14 +19,9 @@
 #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 #  PERFORMANCE OF THIS SOFTWARE.
 
+SUBDIRS = man
+
 bin_PROGRAMS = x11perf
-
-bin_SCRIPTS = x11perfcomp
-
-LIBPATH = $(libdir)/X11/x11perfcomp
-
-x11perfcompdir = $(LIBPATH)
-dist_x11perfcomp_SCRIPTS = fillblnk perfboth perfratio Xmark
 
 AM_CFLAGS = $(CWARNFLAGS) $(XEXT_CFLAGS) $(XFT_CFLAGS) $(XRENDER_CFLAGS) $(X11PERF_CFLAGS)
 x11perf_LDADD = $(XEXT_LIBS) $(XFT_LIBS) $(XRENDER_LIBS) $(X11PERF_LIBS) -lm
@@ -52,55 +47,29 @@ x11perf_SOURCES =	\
         x11perf.c \
         x11perf.h
 
-appman_PRE = \
-        x11perfcomp.man \
-        x11perf.man \
-        Xmark.man
+bin_SCRIPTS = x11perfcomp
+CLEANFILES = $(bin_SCRIPTS)
+EXTRA_DIST = $(bin_SCRIPTS:=.in)
+DIR_SUBSTS = -e 's|@x11perfcompdir[@]|$(x11perfcompdir)|g'
+DIR_SUBSTS += -e 's|@MKTEMP[@]|$(MKTEMP)|g'
 
-x11perfcomp: x11pcomp.cpp
-	$(AM_V_GEN)$(SED) s/LIBPATH/`echo $(LIBPATH) | sed -e s/\\\\//\\\\\\\\\\\\\//g`/ < $(srcdir)/x11pcomp.cpp | \
-		$(SED) s/XCOMM/\#/ > $@
+x11perfcomp: x11perfcomp.in
+	$(AM_V_GEN)$(SED) $(DIR_SUBSTS) < $(srcdir)/$@.in > $@
 
+dist_x11perfcomp_SCRIPTS = 	\
+	fillblnk		\
+	perfboth		\
+	perfratio		\
+	Xmark
 
-CLEANFILES = $(bin_SCRIPTS) x11perfcomp
+MAINTAINERCLEANFILES = ChangeLog INSTALL
 
-EXTRA_DIST = x11pcomp.cpp
+.PHONY: ChangeLog INSTALL
 
-appmandir = $(APP_MAN_DIR)
-
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-
-EXTRA_DIST += $(appman_PRE)
-CLEANFILES += $(appman_DATA)
-
-# Strings to replace in man pages
-XORGRELSTRING = @PACKAGE_STRING@
-  XORGMANNAME = X Version 11
-
-MAN_SUBSTS = \
-	-e 's|__vendorversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' \
-	-e 's|__xorgversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' \
-	-e 's|__xservername__|Xorg|g' \
-	-e 's|__xconfigfile__|xorg.conf|g' \
-	-e 's|__projectroot__|$(prefix)|g' \
-	-e 's|__apploaddir__|$(appdefaultdir)|' \
-	-e 's|__appmansuffix__|$(APP_MAN_SUFFIX)|g' \
-	-e 's|__libmansuffix__|$(LIB_MAN_SUFFIX)|g' \
-	-e 's|__adminmansuffix__|$(ADMIN_MAN_SUFFIX)|g' \
-	-e 's|__miscmansuffix__|$(MISC_MAN_SUFFIX)|g' \
-	-e 's|__filemansuffix__|$(FILE_MAN_SUFFIX)|g'
-
-SUFFIXES = .$(APP_MAN_SUFFIX) .man
-
-.man.$(APP_MAN_SUFFIX):
-	$(AM_V_GEN)$(SED) $(MAN_SUBSTS) < $< > $@
-
-EXTRA_DIST += ChangeLog
-MAINTAINERCLEANFILES = ChangeLog
-
-.PHONY: ChangeLog
+INSTALL:
+	$(INSTALL_CMD)
 
 ChangeLog:
 	$(CHANGELOG_CMD)
 
-dist-hook: ChangeLog
+dist-hook: ChangeLog INSTALL

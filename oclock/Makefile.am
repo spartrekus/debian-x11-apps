@@ -1,7 +1,6 @@
-# $Id: Makefile.am,v 1.12 2005/12/07 16:17:58 kem Exp $
-# 
+#
 #  Copyright 2005  Red Hat, Inc.
-# 
+#
 #  Permission to use, copy, modify, distribute, and sell this software and its
 #  documentation for any purpose is hereby granted without fee, provided that
 #  the above copyright notice appear in all copies and that both that
@@ -11,7 +10,7 @@
 #  specific, written prior permission.  Red Hat makes no
 #  representations about the suitability of this software for any purpose.  It
 #  is provided "as is" without express or implied warranty.
-# 
+#
 #  RED HAT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
 #  INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
 #  EVENT SHALL RED HAT BE LIABLE FOR ANY SPECIAL, INDIRECT OR
@@ -20,9 +19,10 @@
 #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 #  PERFORMANCE OF THIS SOFTWARE.
 
+SUBDIRS = man
 bin_PROGRAMS = oclock
 
-oclock_CFLAGS = $(OCLOCK_CFLAGS)
+AM_CFLAGS = $(OCLOCK_CFLAGS) $(CWARNFLAGS)
 oclock_LDADD = $(OCLOCK_LIBS) -lm
 
 oclock_SOURCES =	\
@@ -33,56 +33,25 @@ oclock_SOURCES =	\
         transform.c \
         transform.h
 
-appman_PRE = \
-        oclock.man
-
 # App default files  (*.ad)
+
+DISTCHECK_CONFIGURE_FLAGS = --with-appdefaultdir=\$${datadir}/X11/app-defaults
 
 appdefaultdir = @appdefaultdir@
 
+dist_appdefault_DATA = \
+        app-defaults/Clock-color
 
-APPDEFAULTFILES = \
-        Clock-color
+EXTRA_DIST = oclock.bit oclmask.bit
 
-SUFFIXES = .ad
+MAINTAINERCLEANFILES = ChangeLog INSTALL
 
-.ad:
-	cp $< $@
+.PHONY: ChangeLog INSTALL
 
-appdefault_DATA = $(APPDEFAULTFILES)
+INSTALL:
+	$(INSTALL_CMD)
 
-EXTRA_DIST = $(APPDEFAULTFILES:%=%.ad) oclock.bit oclmask.bit
+ChangeLog:
+	$(CHANGELOG_CMD)
 
-CLEANFILES = $(APPDEFAULTFILES)
-
-
-appmandir = $(APP_MAN_DIR)
-
-appman_DATA = $(appman_PRE:man=@APP_MAN_SUFFIX@)
-
-EXTRA_DIST += $(appman_PRE)
-CLEANFILES += $(appman_DATA)
-
-SED = sed
-
-# Strings to replace in man pages
-XORGRELSTRING = @PACKAGE_STRING@
-  XORGMANNAME = X Version 11
-
-MAN_SUBSTS = \
-	-e 's|__vendorversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' \
-	-e 's|__xorgversion__|"$(XORGRELSTRING)" "$(XORGMANNAME)"|' \
-	-e 's|__xservername__|Xorg|g' \
-	-e 's|__xconfigfile__|xorg.conf|g' \
-	-e 's|__projectroot__|$(prefix)|g' \
-	-e 's|__apploaddir__|$(appdefaultdir)|' \
-	-e 's|__appmansuffix__|$(APP_MAN_SUFFIX)|g' \
-	-e 's|__libmansuffix__|$(LIB_MAN_SUFFIX)|g' \
-	-e 's|__adminmansuffix__|$(ADMIN_MAN_SUFFIX)|g' \
-	-e 's|__miscmansuffix__|$(MISC_MAN_SUFFIX)|g' \
-	-e 's|__filemansuffix__|$(FILE_MAN_SUFFIX)|g'
-
-SUFFIXES += .$(APP_MAN_SUFFIX) .man
-
-.man.$(APP_MAN_SUFFIX):
-	sed $(MAN_SUBSTS) < $< > $@
+dist-hook: ChangeLog INSTALL

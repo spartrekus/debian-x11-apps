@@ -1,4 +1,3 @@
-/* $Xorg: x11perf.h,v 1.3 2000/08/17 19:54:10 cpqbld Exp $ */
 /*****************************************************************************
 Copyright 1988, 1989 by Digital Equipment Corporation, Maynard, Massachusetts.
 
@@ -21,7 +20,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************************/
-/* $XFree86: xc/programs/x11perf/x11perf.h,v 3.4 2001/07/25 15:05:16 dawes Exp $ */
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -185,8 +183,11 @@ extern void DoGetImage ( XParms xp, Parms p, int reps );
 extern void DoPutImage ( XParms xp, Parms p, int reps );
 #ifdef MITSHM
 extern int InitShmPutImage ( XParms xp, Parms p, int reps );
+extern int InitShmGetImage ( XParms xp, Parms p, int reps );
 extern void DoShmPutImage ( XParms xp, Parms p, int reps );
+extern void DoShmGetImage ( XParms xp, Parms p, int reps );
 extern void EndShmPutImage ( XParms xp, Parms p );
+extern void EndShmGetImage ( XParms xp, Parms p );
 #endif
 extern void MidCopyPix ( XParms xp, Parms p );
 extern void EndCopyWin ( XParms xp, Parms p );
@@ -293,7 +294,7 @@ extern void EndAAText ( XParms xp, Parms p );
 extern int InitTrapezoids ( XParms xp, Parms p, int reps );
 extern void DoTrapezoids ( XParms xp, Parms p, int reps );
 extern void EndTrapezoids ( XParms xp, Parms p );
-#ifdef XRENDER
+#if defined(XRENDER) && defined(XFT)
 extern int InitFixedTraps ( XParms xp, Parms p, int reps );
 extern void DoFixedTraps ( XParms xp, Parms p, int reps );
 extern void EndFixedTraps ( XParms xp, Parms p );

@@ -21,36 +21,34 @@ dnl  PERFORMANCE OF THIS SOFTWARE.
 dnl
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
-AC_INIT(xman, [1.1.0], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],xman)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AC_PREREQ([2.60])
+AC_INIT([xman], [1.1.2],
+        [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], [xman])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros 1.3 or later: XORG_DEFAULT_OPTIONS
+# Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
 m4_ifndef([XORG_MACROS_VERSION],
-	  [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.3)
-
-AM_CONFIG_HEADER(config.h)
-
-AC_PROG_CC
-AC_PROG_INSTALL
-AC_CANONICAL_HOST
-
+	  [m4_fatal([must install xorg-macros 1.8 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
+
+AC_CONFIG_HEADERS([config.h])
+
+AC_CANONICAL_HOST
 
 AC_CHECK_FUNC([mkstemp], 
    AC_DEFINE(HAS_MKSTEMP,1,[Define to 1 if you have the "mkstemp" function.]))
 
 AC_ARG_WITH(helpdir,
-        AC_HELP_STRING([--with-helpdir=<path>],
+        AS_HELP_STRING([--with-helpdir=<path>],
                        [Set default directory for xman.help (default: ${datadir}/X11)]),
         [HELPDIR="$withval"],
         [HELPDIR=${datadir}/X11])
 AC_SUBST([HELPDIR])
 
 AC_ARG_WITH(sysmanpath,
-        AC_HELP_STRING([--with-sysmanpath=<path>],
+        AS_HELP_STRING([--with-sysmanpath=<path>],
                        [Set default system man page search path]),
         [SYSMANPATH="$withval"], [])
 if test x$SYSMANPATH != x; then
@@ -59,7 +57,7 @@ if test x$SYSMANPATH != x; then
 fi
 
 AC_ARG_WITH(localmanpath,
-        AC_HELP_STRING([--with-localmanpath=<path>],
+        AS_HELP_STRING([--with-localmanpath=<path>],
                        [Set default local man page search path]),
         [LOCALMANPATH="$withval"], [])
 if test x$LOCALMANPATH != x; then
@@ -67,11 +65,11 @@ if test x$LOCALMANPATH != x; then
 	[Default local man page search path (default: none)])
 fi
 
-# Checks for pkg-config packages
-PKG_CHECK_MODULES(XMAN, xaw7)
+# Obtain compiler/linker options from depedencies
+PKG_CHECK_MODULES(XMAN, xproto xaw7 xt)
 
 AC_ARG_WITH(manconfig,
-        AC_HELP_STRING([--with-manconfig=<filename>],
+        AS_HELP_STRING([--with-manconfig=<filename>],
                        [Set default system man configuration file]),
         [MANCONF="$withval"], [])
 if test x$MANCONF = x; then
@@ -130,15 +128,21 @@ if test x$MANCONF != x ; then
 	    AC_MSG_ERROR([Could not determine man page file config format.])
     esac
 fi
-AC_SUBST(XMAN_CFLAGS)
-AC_SUBST(XMAN_LIBS)
 
 PKG_CHECK_MODULES(APPDEFS, xt)
-xt_appdefaultdir=$(pkg-config --variable=appdefaultdir xt)
+xt_appdefaultdir=`$PKG_CONFIG --variable=appdefaultdir xt`
 AC_ARG_WITH(appdefaultdir,
-	AC_HELP_STRING([--with-appdefaultdir=<pathname>],
+	AS_HELP_STRING([--with-appdefaultdir=<pathname>],
 	  [specify directory for app-defaults files (default is autodetected)]),
 	[appdefaultdir="$withval"], [appdefaultdir="${xt_appdefaultdir}"])
 AC_SUBST(appdefaultdir)
 
-AC_OUTPUT([Makefile])
+if test "x$RELEASE_VERSION" != "x"; then
+	AC_DEFINE_UNQUOTED([RELEASE_VERSION], "$RELEASE_VERSION", 
+		[Release version string if set])
+fi
+
+AC_CONFIG_FILES([
+	Makefile
+	man/Makefile])
+AC_OUTPUT

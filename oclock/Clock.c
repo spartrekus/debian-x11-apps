@@ -1,6 +1,5 @@
 /*
- * $Xorg: Clock.c,v 1.4 2001/02/09 02:05:33 xorgcvs Exp $
- *
+
 Copyright 1989, 1998  The Open Group
 
 Permission to use, copy, modify, distribute, and sell this software and its
@@ -22,14 +21,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Except as contained in this notice, the name of The Open Group shall not be
 used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
- */
-/* $XFree86: xc/programs/oclock/Clock.c,v 1.6 2001/07/25 15:05:15 dawes Exp $ */
+
+*/
 
 /*
  * Clock.c
  *
  * a NeWS clone clock
  */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <X11/IntrinsicP.h>
 #include <X11/StringDefs.h>
@@ -74,10 +77,10 @@ static XtResource resources[] = {
 #undef goffset
 
 static void ClassInitialize ( void );
-static void Initialize ( Widget greq, Widget gnew, ArgList args, 
+static void Initialize ( Widget greq, Widget gnew, ArgList args,
 			 Cardinal *num_args );
 static void Resize ( Widget widget );
-static void Realize ( Widget gw, XtValueMask *valueMask, 
+static void Realize ( Widget gw, XtValueMask *valueMask,
 		      XSetWindowAttributes *attrs );
 static void Destroy ( Widget gw );
 static void Redisplay ( Widget gw, XEvent *event, Region region );
@@ -130,7 +133,7 @@ ClockClassRec clockClassRec = {
     }
 };
 
-static void ClassInitialize()
+static void ClassInitialize(void)
 {
     XtAddConverter( XtRString, XtRBackingStore, XmuCvtStringToBackingStore,
 		    NULL, 0 );
@@ -139,10 +142,8 @@ static void ClassInitialize()
 WidgetClass clockWidgetClass = (WidgetClass) &clockClassRec;
 
 /* ARGSUSED */
-static void Initialize (greq, gnew, args, num_args)
-    Widget greq, gnew;
-    ArgList args;
-    Cardinal *num_args;
+static void Initialize (Widget greq, Widget gnew,
+			ArgList args, Cardinal *num_args)
 {
     ClockWidget w = (ClockWidget)gnew;
     XtGCMask	valuemask;
@@ -165,7 +166,7 @@ static void Initialize (greq, gnew, args, num_args)
 
     	myXGCV.foreground = w->clock.jewel;
     	w->clock.jewelGC = XtGetGC(gnew, valuemask, &myXGCV);
-    
+
     	myXGCV.foreground = w->core.background_pixel;
     	w->clock.eraseGC = XtGetGC(gnew, valuemask, &myXGCV);
     }
@@ -173,19 +174,18 @@ static void Initialize (greq, gnew, args, num_args)
     /* wait for Realize to add the timeout */
     w->clock.interval_id = 0;
 
-    if (w->clock.shape_window && !XShapeQueryExtension (XtDisplay (w), 
-							&shape_event_base, 
+    if (w->clock.shape_window && !XShapeQueryExtension (XtDisplay (w),
+							&shape_event_base,
 							&shape_error_base))
     w->clock.shape_window = False;
     w->clock.shape_mask = 0;
-    w->clock.shapeGC = 0;
+    w->clock.shapeGC = NULL;
     w->clock.shape_width = 0;
     w->clock.shape_height = 0;
     w->clock.polys_valid = 0;
 }
 
-static void Resize (widget)
-    Widget	widget;
+static void Resize (Widget widget)
 {
     ClockWidget	w = (ClockWidget) widget;
     XGCValues	xgcv;
@@ -222,7 +222,7 @@ static void Resize (widget)
 			w->core.height - face_height, face_height,
 			-WINDOW_WIDTH(w)/2, WINDOW_WIDTH(w)/2,
 			-WINDOW_HEIGHT(w)/2, WINDOW_HEIGHT(w)/2);
-    
+
 	/*
 	 * allocate a pixmap to draw shapes in
 	 */
@@ -234,7 +234,7 @@ static void Resize (widget)
 	    XFreePixmap (XtDisplay (w), w->clock.shape_mask);
 	    w->clock.shape_mask = None;
 	}
-	
+
 	if (!w->clock.shape_mask)
 	{
 	    w->clock.shape_mask = XCreatePixmap (XtDisplay (w), XtWindow (w),
@@ -317,7 +317,7 @@ static void Resize (widget)
 			    0, 360 * 64);
 	}
 
-	XShapeCombineMask (XtDisplay (w), XtWindow (w), ShapeClip, 
+	XShapeCombineMask (XtDisplay (w), XtWindow (w), ShapeClip,
 		    0, 0, shape_mask, ShapeSet);
 
     } else
@@ -336,7 +336,7 @@ static void Resize (widget)
     	XConfigureWindow (XtDisplay (w), XtWindow (w),
 			    CWWidth|CWHeight|CWBorderWidth,
 			    &xwc);
-    
+
     	SetTransform (&w->clock.t,
 	    0, xwc.width,
 	    xwc.height, 0,
@@ -344,11 +344,9 @@ static void Resize (widget)
 	    -WINDOW_HEIGHT(w)/2, WINDOW_HEIGHT(w)/2);
     }
 }
- 
-static void Realize (gw, valueMask, attrs)
-     Widget gw;
-     XtValueMask *valueMask;
-     XSetWindowAttributes *attrs;
+
+static void Realize (Widget gw, XtValueMask *valueMask,
+		     XSetWindowAttributes *attrs)
 {
      ClockWidget	w = (ClockWidget)gw;
 
@@ -366,11 +364,10 @@ static void Realize (gw, valueMask, attrs)
 		     *valueMask, attrs );
     if (!w->clock.transparent)
 	Resize (gw);
-    new_time ((XtPointer) gw, 0);
+    new_time ((XtPointer) gw, NULL);
 }
 
-static void Destroy (gw)
-     Widget gw;
+static void Destroy (Widget gw)
 {
      ClockWidget w = (ClockWidget)gw;
      if (w->clock.interval_id) XtRemoveTimeOut (w->clock.interval_id);
@@ -387,10 +384,7 @@ static void Destroy (gw)
 }
 
 /* ARGSUSED */
-static void Redisplay(gw, event, region)
-     Widget gw;
-     XEvent *event;
-     Region region;
+static void Redisplay(Widget gw, XEvent *event, Region region)
 {
     ClockWidget	w;
 
@@ -417,8 +411,7 @@ static void Redisplay(gw, event, region)
  */
 
 static double
-clock_to_angle (clock)
-double	clock;
+clock_to_angle (double	clock)
 {
 	if (clock >= .75)
 		clock -= 1.0;
@@ -426,14 +419,12 @@ double	clock;
 }
 
 /* ARGSUSED */
-static void new_time (client_data, id)
-     XtPointer client_data;
-     XtIntervalId *id;		/* unused */
+static void new_time (XtPointer client_data, XtIntervalId *id)
 {
         ClockWidget	w = (ClockWidget)client_data;
 	Time_t		now;
 	struct tm	*tm;
-	
+
 	if (!w->clock.transparent)
 	if (w->clock.polys_valid) {
 		paint_hands (w, XtWindow (w), w->clock.eraseGC, w->clock.eraseGC);
@@ -452,7 +443,7 @@ static void new_time (client_data, id)
 	 * take a while and we'd like the clock to keep up
 	 * with time changes.
 	 */
-	w->clock.interval_id = 
+	w->clock.interval_id =
 	    XtAppAddTimeOut (XtWidgetToApplicationContext((Widget) w),
 			     (60 - tm->tm_sec) * 1000, new_time, client_data);
 	compute_hands (w);
@@ -463,10 +454,7 @@ static void new_time (client_data, id)
 } /* new_time */
 
 void
-paint_jewel (w, d, gc)
-ClockWidget w;
-Drawable    d;
-GC	    gc;
+paint_jewel (ClockWidget w, Drawable d, GC gc)
 {
     if (JEWEL_SIZE(w) > 0.0)
     {
@@ -483,9 +471,7 @@ GC	    gc;
  * check to see if the polygon intersects the circular jewel
  */
 int
-check_jewel_poly (w, poly)
-ClockWidget	w;
-TPoint		poly[POLY_SIZE];
+check_jewel_poly (ClockWidget w, TPoint poly[POLY_SIZE])
 {
     double	a2, b2, c2, d2;
     double	x, y, size;
@@ -517,10 +503,7 @@ TPoint		poly[POLY_SIZE];
 }
 
 void
-check_jewel (w, d, gc)
-ClockWidget	w;
-Drawable	d;
-GC		gc;
+check_jewel (ClockWidget w, Drawable d, GC gc)
 {
 	if (!w->clock.polys_valid || JEWEL_SIZE(w) <= 0.0)
 		return;
@@ -538,16 +521,14 @@ GC		gc;
  * This is represented with a five sided polygon.
  */
 void
-compute_hand (w, a, l, width, poly)
-ClockWidget	w;
-double		a, l, width;
-TPoint		poly[POLY_SIZE];
+compute_hand (ClockWidget w, double a, double l, double width,
+	      TPoint poly[POLY_SIZE])
 {
 	double	c, s;
 
 	c = cos(a);
 	s = sin(a);
-	poly[0].x = c * l;	
+	poly[0].x = c * l;
 	poly[0].y = s * l;
 	poly[1].x = (l - width) * c - s * width;
 	poly[1].y = (l - width) * s + c * width;
@@ -562,8 +543,7 @@ TPoint		poly[POLY_SIZE];
 }
 
 void
-compute_hands (w)
-ClockWidget	w;
+compute_hands (ClockWidget w)
 {
 	compute_hand (w, w->clock.minute_angle,
 		MINUTE_LENGTH(w), MINUTE_WIDTH(w), w->clock.minute_poly);
@@ -573,21 +553,14 @@ ClockWidget	w;
 }
 
 void
-paint_hand (w, d, gc, poly)
-ClockWidget	w;
-Drawable	d;
-GC		gc;
-TPoint		poly[POLY_SIZE];
+paint_hand (ClockWidget w, Drawable d, GC gc, TPoint poly[POLY_SIZE])
 {
 	TFillPolygon (XtDisplay (w), d, gc, &w->clock.t, poly, POLY_SIZE,
 			Convex, CoordModeOrigin);
 }
 
 void
-paint_hands (w, d, minute_gc, hour_gc)
-ClockWidget	w;
-Drawable	d;
-GC		minute_gc, hour_gc;
+paint_hands (ClockWidget w, Drawable d, GC minute_gc, GC hour_gc)
 {
     if (w->clock.polys_valid) {
 	paint_hand (w, d, hour_gc, w->clock.hour_poly);

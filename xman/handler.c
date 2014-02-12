@@ -35,6 +35,9 @@ from the X Consortium.
  * Author:    Chris D. Peterson, MIT Project Athena
  * Created:   October 29, 1987
  */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -44,6 +47,12 @@ from the X Consortium.
 #include "printdialog.h"
 #include "print.h"
 #endif /* INCLUDE_XPRINT_SUPPORT */
+
+#ifdef RELEASE_VERSION
+#define XMAN_VERSION "Xman Version " PACKAGE_VERSION " - X11R" RELEASE_VERSION
+#else
+#define XMAN_VERSION "Xman Version " PACKAGE_VERSION
+#endif
 
 static void PutUpManpage(ManpageGlobals * man_globals, FILE * file);
 static void ToggleBothShownState(ManpageGlobals * man_globals);
@@ -321,30 +330,30 @@ SaveFormattedPage(Widget w, XEvent * event, String * params, Cardinal * num_para
     if (!man_globals->compress)
 #endif
 
-      sprintf(cmdbuf, "%s %s %s", COPY, man_globals->tempfile, 
-	      man_globals->save_file);
+      snprintf(cmdbuf, sizeof(cmdbuf), "%s %s %s", COPY,
+	       man_globals->tempfile, man_globals->save_file);
 
 #ifndef NO_COMPRESS
     else
       if (man_globals->gzip)
-	sprintf(cmdbuf, "%s < %s > %s", GZIP_COMPRESS, man_globals->tempfile,
-		man_globals->save_file);
+	snprintf(cmdbuf, sizeof(cmdbuf), "%s < %s > %s", GZIP_COMPRESS,
+		 man_globals->tempfile, man_globals->save_file);
       else
-	sprintf(cmdbuf, "%s < %s > %s", COMPRESS, man_globals->tempfile, 
-		man_globals->save_file);
+	snprintf(cmdbuf, sizeof(cmdbuf), "%s < %s > %s", COMPRESS,
+		 man_globals->tempfile, man_globals->save_file);
 #endif
 
     if(! system(cmdbuf)) {
 	/* make sure the formatted man page is fully accessible by the world */
 	if (chmod(man_globals->save_file, CHMOD_MODE) != 0) {
-	    sprintf(error_buf,
+	    snprintf(error_buf, sizeof(error_buf),
 		    "Couldn't set permissions on formatted man page '%s'.\n",
 		    man_globals->save_file);
 	    PopupWarning( man_globals, error_buf);
 	}
     } else {
-	sprintf(error_buf, "Error while executing the command '%s'.\n",
-		cmdbuf);
+	snprintf(error_buf, sizeof(error_buf),
+		 "Error while executing the command '%s'.\n", cmdbuf);
 	PopupWarning( man_globals, error_buf);
     }
     break;
@@ -352,9 +361,8 @@ SaveFormattedPage(Widget w, XEvent * event, String * params, Cardinal * num_para
   case 'c':
     break;
   default:
-    sprintf(error_buf,"%s %s", "Xman - SaveFormattedPagee:",
-	    "Unknown argument must be either 'Save' or 'Cancel'.");
-    PopupWarning(man_globals, error_buf);
+    PopupWarning(man_globals, "Xman - SaveFormattedPage: "
+		 "Unknown argument must be either 'Save' or 'Cancel'.");
     return;
   }
     
@@ -383,7 +391,6 @@ void
 GotoPage(Widget w, XEvent * event, String * params, Cardinal * num_params)
 {
   ManpageGlobals * man_globals;
-  char error_buf[BUFSIZ];
   Arg arglist[1];
   Boolean sensitive;
 
@@ -422,9 +429,9 @@ GotoPage(Widget w, XEvent * event, String * params, Cardinal * num_params)
     man_globals->dir_shown = TRUE;
     break;
   default:
-    sprintf(error_buf,"%s %s", "Xman - GotoPage: Unknown argument must be",
-	    "either Manpage or Directory.");
-    XtAppWarning(XtWidgetToApplicationContext(w), error_buf);
+    XtAppWarning(XtWidgetToApplicationContext(w),
+		 "Xman - GotoPage: Unknown argument must be "
+		 "either Manpage or Directory.");
     return;
   }
 }

@@ -1,4 +1,3 @@
-/* $Xorg: dsimple.h,v 1.4 2001/02/09 02:05:54 xorgcvs Exp $ */
 /*
 
 Copyright 1993, 1998  The Open Group
@@ -26,7 +25,6 @@ other dealings in this Software without prior written authorization
 from The Open Group.
 
 */
-/* $XFree86: xc/programs/xlsfonts/dsimple.h,v 1.8 2002/12/24 17:43:01 tsi Exp $ */
 
 /*
  * Just_display.h: This file contains the definitions needed to use the
@@ -63,7 +61,7 @@ Display *Open_Display(const char *);
 void Setup_Display_And_Screen(int *, char **);
 void Close_Display(void);
 Window Select_Window_Args(int *, char **);
-void usage(void);
+void usage(void) _X_NORETURN;
 
 #define X_USAGE "[host:display]"              /* X arguments handled by
 						 Get_Display_Name */
@@ -78,9 +76,5 @@ void usage(void);
 
 Window Select_Window(Display *, int);
 Window Window_With_Name(Display *, Window, const char *);
-#ifdef __GNUC__
-void Fatal_Error(char *, ...) __attribute__((__noreturn__));
-#else
-void Fatal_Error(char *, ...);
-#endif
+void Fatal_Error(char *, ...) _X_NORETURN;
 void outl(char *, ...);

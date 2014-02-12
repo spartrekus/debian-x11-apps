@@ -21,35 +21,34 @@ dnl  PERFORMANCE OF THIS SOFTWARE.
 dnl
 dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
-AC_INIT(xclock,[1.0.4], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],xclock)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AC_PREREQ([2.60])
+AC_INIT([xclock],
+	[1.0.6],
+	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
+	[xclock])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros: XORG_DEFAULT_OPTIONS
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.3 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.3)
-
-AM_CONFIG_HEADER(config.h)
-
-AC_PROG_CC
-AC_PROG_INSTALL
-
+# Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.8 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
+
+AC_CONFIG_HEADERS([config.h])
+
+
 
 AC_CHECK_FUNCS([strlcpy getpid])
 
-AC_SEARCH_LIBS([iconv], [iconv],
-	[AC_DEFINE(HAVE_ICONV, 1, [Define to 1 if iconv() is available.])])
+AM_ICONV
 
 dnl Required dependencies
-PKG_CHECK_MODULES(XCLOCK_X11, x11)
-PKG_CHECK_MODULES(XAW, xaw7)
-XCLOCK_CFLAGS="$XCLOCK_X11_CFLAGS $XAW_CFLAGS"
-XCLOCK_LIBS="$XCLOCK_X11_LIBS $XAW_LIBS"
+PKG_CHECK_MODULES(XCLOCK, xaw7 xmu x11)
+XCLOCK_LIBS="$XCLOCK_LIBS $LIBICONV"
 
 dnl Optional dependencies
-AC_ARG_WITH(xft, AC_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
+AC_ARG_WITH(xft, AS_HELP_STRING([--with-xft],[Use Xft2 and Xrender for rendering (Default is YES)]),use_xft="$withval",use_xft="try")
 if test x$use_xft != xno ; then
 	PKG_CHECK_MODULES(XFT, [xrender xft])
 	AC_SEARCH_LIBS(sqrt, [m])
@@ -59,7 +58,7 @@ if test x$use_xft != xno ; then
 	AC_DEFINE([XFREE86_FT2],1,[Define to use Xft2 library])
 fi
 
-AC_ARG_WITH(xkb, AC_HELP_STRING([--with-xkb],[Use XKB to sound bells (Default is YES)]),use_xkb="$withval",use_xkb="try")
+AC_ARG_WITH(xkb, AS_HELP_STRING([--with-xkb],[Use XKB to sound bells (Default is YES)]),use_xkb="$withval",use_xkb="try")
 if test x$use_xkb != xno ; then
 	PKG_CHECK_MODULES(XKB, xkbfile)
 	XCLOCK_CFLAGS="$XCLOCK_CFLAGS $XKB_CFLAGS"
@@ -67,15 +66,16 @@ if test x$use_xkb != xno ; then
 	AC_DEFINE([XKB],1,[Define to use XkbStdBell])
 fi
 
-AC_SUBST(XCLOCK_CFLAGS)
-AC_SUBST(XCLOCK_LIBS)
 
 PKG_CHECK_MODULES(APPDEFS, xt)
-xt_appdefaultdir=$(pkg-config --variable=appdefaultdir xt)
+xt_appdefaultdir=`$PKG_CONFIG --variable=appdefaultdir xt`
 AC_ARG_WITH(appdefaultdir,
-	AC_HELP_STRING([--with-appdefaultdir=<pathname>],
+	AS_HELP_STRING([--with-appdefaultdir=<pathname>],
 	  [specify directory for app-defaults files (default is autodetected)]),
 	[appdefaultdir="$withval"], [appdefaultdir="${xt_appdefaultdir}"])
 AC_SUBST(appdefaultdir)
 
-AC_OUTPUT([Makefile])
+AC_CONFIG_FILES([
+	Makefile
+	man/Makefile])
+AC_OUTPUT

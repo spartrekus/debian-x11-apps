@@ -1,25 +1,26 @@
-# $XdotOrg: app/xcursorgen/configure.ac,v 1.7 2005/12/15 00:24:05 kem Exp $
+dnl Process this file with autoconf to create configure.
 
-AC_PREREQ([2.57])
-AC_INIT(xcursorgen, [1.0.3], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg], xcursorgen)
-AM_INIT_AUTOMAKE([dist-bzip2])
+AC_PREREQ([2.60])
+AC_INIT([xcursorgen],
+	[1.0.5],
+	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
+	[xcursorgen])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros 1.3 or later: XORG_DEFAULT_OPTIONS
+# Require xorg-macros 1.8 or later: XORG_MANPAGE_SECTIONS
 m4_ifndef([XORG_MACROS_VERSION],
-	  [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.3)
+	  [m4_fatal([must install xorg-macros 1.8 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.8)
 
-AM_CONFIG_HEADER(config.h)
-
-AC_PROG_CC
-AC_PROG_INSTALL
+AC_CONFIG_HEADERS([config.h])
 
 XORG_DEFAULT_OPTIONS
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XCURSORGEN, x11 xcursor libpng12)
-AC_SUBST(XCURSORGEN_CFLAGS)
-AC_SUBST(XCURSORGEN_LIBS)
+PKG_CHECK_MODULES(XCURSORGEN, x11 xcursor libpng >= 1.2.0)
 
-AC_OUTPUT([Makefile])
+AC_CONFIG_FILES([
+	Makefile
+	man/Makefile])
+AC_OUTPUT
