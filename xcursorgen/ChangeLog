@@ -1,3 +1,61 @@
+commit 68939d23da457d4beeab73fca644b5c68224bdd3
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat May 31 16:33:07 2014 -0700
+
+    xcursorgen 1.0.6
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit c21306ebf8cfa780d3d4fd31a41d1c7cac2e8dbb
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Tue Nov 26 22:22:30 2013 -0800
+
+    Print which option was in error along with usage message
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 3c31233990f8c91b4f54b4ba7d4cd02f67c7812e
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Feb 23 11:59:56 2013 -0800
+
+    config: Add missing AC_CONFIG_SRCDIR
+    
+    Regroup AC statements under the Autoconf initialization section.
+    Regroup AM statements under the Automake initialization section.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 7c50a1b8952baa8227908881858428f2ce971ed8
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Feb 23 11:56:33 2013 -0800
+
+    Combine usage message into single string/call
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 70d4855b4b313621cb250922712a1461dd742c3f
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Feb 23 11:52:11 2013 -0800
+
+    Use C99 struct initializer for ximage in check_image()
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit b0e174921ac5216fb4e21015a9b4bb9999b4b87b
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Feb 23 11:44:00 2013 -0800
+
+    Change order of struct flist members to pack better on 64-bit archs
+    
+    As reported by clang:
+    xcursorgen.c:42:9: warning: padding struct 'struct flist' with 4 bytes to align 'pngfile' [-Wpadded]
+      char *pngfile;
+            ^
+    xcursorgen.c:44:17: warning: padding struct 'struct flist' with 4 bytes to align 'next' [-Wpadded]
+      struct flist *next;
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
 commit 1edaf53856983391b05d3a488acc0b6cc257a401
 Author: Alan Coopersmith <alan.coopersmith@oracle.com>
 Date:   Thu Mar 22 21:54:00 2012 -0700

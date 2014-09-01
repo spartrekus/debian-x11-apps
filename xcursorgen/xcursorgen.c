@@ -39,26 +39,26 @@ struct flist
 {
   int size;
   int xhot, yhot;
-  char *pngfile;
   int delay;
+  char *pngfile;
   struct flist *next;
 };
 
 static void
 usage (const char *name)
 {
-  fprintf (stderr, "usage: %s [-V] [--version] [-?] [--help] [-p <dir>] [--prefix <dir>] [CONFIG [OUT]]\n",
-	   name);
-
-  fprintf (stderr, "Generate an Xcursor file from a series of PNG images\n");
-  fprintf (stderr, "\n");
-  fprintf (stderr, "  -V, --version      display the version number and exit\n");
-  fprintf (stderr, "  -?, --help         display this message and exit\n");
-  fprintf (stderr, "  -p, --prefix <dir> find cursor images in <dir>\n");
-  fprintf (stderr, "\n");
-  fprintf (stderr, "With no CONFIG, or when CONFIG is -, read standard input. "
-		   "Same with OUT and\n");
-  fprintf (stderr, "standard output.\n");
+  fprintf (stderr,
+	   "usage: %s [-V] [--version] [-?] [--help] [-p <dir>] [--prefix <dir>] [CONFIG [OUT]]\n%s",
+	   name,
+	   "Generate an Xcursor file from a series of PNG images\n"
+	   "\n"
+	   "  -V, --version      display the version number and exit\n"
+	   "  -?, --help         display this message and exit\n"
+	   "  -p, --prefix <dir> find cursor images in <dir>\n"
+	   "\n"
+	   "With no CONFIG, or when CONFIG is -, read standard input. "
+	   "Same with OUT and\n"
+	   "standard output.\n");
 }
 
 static int
@@ -338,7 +338,6 @@ check_image (char *image)
   unsigned int width, height;
   unsigned char *data;
   int x_hot, y_hot;
-  XImage ximage;
   unsigned char hash[XCURSOR_BITMAP_HASH_SIZE];
   int i;
 
@@ -347,19 +346,23 @@ check_image (char *image)
     fprintf (stderr, "Can't open bitmap file \"%s\"\n", image);
     return 1;
   }
-  ximage.height = height;
-  ximage.width = width;
-  ximage.depth = 1;
-  ximage.bits_per_pixel = 1;
-  ximage.xoffset = 0;
-  ximage.format = XYPixmap;
-  ximage.data = (char *)data;
-  ximage.byte_order = LSBFirst;
-  ximage.bitmap_unit = 8;
-  ximage.bitmap_bit_order = LSBFirst;
-  ximage.bitmap_pad = 8;
-  ximage.bytes_per_line = (width+7)/8;
-  XcursorImageHash (&ximage, hash);
+  else {
+    XImage ximage = {
+      .width = width,
+      .height = height,
+      .depth = 1,
+      .bits_per_pixel = 1,
+      .xoffset = 0,
+      .format = XYPixmap,
+      .data = (char *)data,
+      .byte_order = LSBFirst,
+      .bitmap_unit = 8,
+      .bitmap_bit_order = LSBFirst,
+      .bitmap_pad = 8,
+      .bytes_per_line = (width+7)/8
+    };
+    XcursorImageHash (&ximage, hash);
+  }
   printf ("%s: ", image);
   for (i = 0; i < XCURSOR_BITMAP_HASH_SIZE; i++)
     printf ("%02x", hash[i]);
@@ -404,6 +407,8 @@ main (int argc, char *argv[])
 	  i++;
 	  if (argv[i] == NULL)
 	    {
+	      fprintf (stderr, "%s: %s requires an argument\n",
+		       argv[0], argv[i-1]);
 	      usage (argv[0]);
 	      return 1;
 	    }
@@ -417,6 +422,7 @@ main (int argc, char *argv[])
 	out = argv[i];
       else
       {
+	fprintf (stderr, "%s: unexpected argument '%s'\n", argv[0], argv[i]);
 	usage (argv[0]);
 	return 1;
       }

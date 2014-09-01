@@ -2,10 +2,13 @@ Source: x11-apps
 Section: x11
 Priority: optional
 Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
-Uploaders: Cyril Brulebois <kibi@debian.org>
 Build-Depends:
- debhelper (>= 5.0.0),
+ debhelper (>= 7.0.50),
  pkg-config,
+ autotools-dev,
+# XXX bison build-dep is to work around a bug in xgc's configure, remove as
+# soon as that's fixed.
+ bison,
  libpng12-dev,
  libx11-dev (>= 2:1.0.0),
  libxaw7-dev (>= 1:1.0.1),
@@ -58,16 +61,17 @@ Recommends: xbitmaps
 Suggests: mesa-utils
 Conflicts: bitmap, oclock, x11perf, xbiff, xcalc, xclipboard, xclock, xconsole,
  xcursorgen, xditview, xeyes, xgc, xload, xlogo, xmag, xman, xmore, xwd,
- xwud
+ xwud, transset
 Replaces: xbase-clients (<= 1:7.2.ds2-3), bitmap, oclock, x11perf, xbiff,
  xcalc, xclipboard, xclock, xconsole, xcursorgen, xditview, xeyes, xgc,
- xload, xlogo, xmag, xman, xmore, xwd, xwud
+ xload, xlogo, xmag, xman, xmore, xwd, xwud, transset
 Description: X applications
  This package provides a miscellaneous assortment of X applications
  that ship with the X Window System, including:
   - atobm, bitmap, and bmtoa, tools for manipulating bitmap images;
   - ico, a demo program animating polyhedrons;
   - oclock and xclock, graphical clocks;
+  - rendercheck, a program to test render extension implementations;
   - transset, a tool to set opacity property on a window;
   - xbiff, a tool which tells you when you have new email;
   - xcalc, a scientific calculator desktop accessory;

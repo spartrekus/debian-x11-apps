@@ -1,3 +1,91 @@
+commit 39db25e110cfedcec99394dfa7614ca248685c0d
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri May 17 17:47:14 2013 -0700
+
+    transset 1.0.1
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit fc4bf3cda6d14cac9272f8399bb6dc614c1ef956
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 22 22:05:39 2013 -0800
+
+    Add the options to the man page (they were all missing before)
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit f59b8db649c1596a38ce20025417c4060d442d64
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 22 21:33:25 2013 -0800
+
+    Store min & max as doubles, not floats
+    
+    Since atof generates doubles, and we use them to compare/limit the values
+    of the double "d", might as well keep them in the same format instead of
+    doing unnecessary conversions.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit e79903a50b0a9cba9d0e41fc2e389117f3ff42ef
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 22 21:27:00 2013 -0800
+
+    Typo fixes in verbose message & comment
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit da0682051e880faa2ef1accac388040bb52b46d8
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 22 21:22:43 2013 -0800
+
+    Use correct variable for printing current opacity
+    
+    Found by clang:
+    transSet.c:303:30: warning: variable 'opacity' is uninitialized when used here
+          [-Wuninitialized]
+                        (double) opacity / OPAQUE);
+                                 ^~~~~~~
+    
+    When running transset -v, it prints the current opacity of a window
+    before changing it, but was printing garbage - after this fix, correctly
+    prints the value set by the previous run.
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 65f010b8c4ef0e4fa5fc6a0679173f81c7a4b626
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 22 21:17:59 2013 -0800
+
+    Move release date from transset.c to configure.ac so we remember to update it
+    
+    Currently our 2012 release prints:
+       released: 2007-09-21
+    when you run transset --version
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 6cd34b45c87717ae7901993e32b99a43652fa0f3
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 22 21:14:09 2013 -0800
+
+    Include PACKAGE_STRING in --version output
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 2b57aeb0ea616cfca8e6fcbd844960269af8c533
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Fri Feb 22 21:11:04 2013 -0800
+
+    Combine usage message into single string/call
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit a2485424bd0f184700dd0a4f0823fb4c4cf25f66
+Author: Arnaud Fontaine <arnau@debian.org>
+Date:   Thu Jun 7 19:33:28 2012 +0900
+
+    Fix program name in usage information, transset instead of transset-df.
+
 commit 49d17bde62694c2f0e2bb7883641bd60830c6bd5
 Author: Arnaud Fontaine <arnau@debian.org>
 Date:   Tue Jun 5 14:55:54 2012 +0900

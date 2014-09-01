@@ -25,8 +25,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #define VERSIONSTR "6"
-#define RELEASEDATESTR "2007-09-21"
 
 #include <stdio.h>
 #include <X11/Xlib.h>
@@ -44,37 +47,23 @@ Window target_win;
 void
 Usage (void)
 {
-    fprintf (stderr, "usage: transset-df [-options ...] [opacity]\n");
-    fprintf (stderr, "options:\n");
-
-    fprintf (stderr,
-             "    -h, --help           display this message\n");
-    fprintf (stderr,
-             "    -t, --toggle         force toggle of opacity\n");
-    fprintf (stderr,
-             "    -c, --click          select by clicking on window  (default)\n");
-    fprintf (stderr,
-             "    -p, --point          select the window currently under the cursor\n");
-    fprintf (stderr,
-             "    -a, --actual         select the actual window\n");
-    fprintf (stderr,
-             "    -n, --name NAME      select by name, NAME is matched as regular expression\n");
-    fprintf (stderr,
-             "    --no-regex           don't use regular expression for matching name\n");
-    fprintf (stderr,
-             "    -i, --id             select by window id\n");
-    fprintf (stderr,
-             "        --inc            increase by the given opacity\n");
-    fprintf (stderr,
-             "        --dec            decrease by given opacity\n");
-    fprintf (stderr,
-             "    -m, --min OPACITY    minimum possible opacity  (default = 0)\n");
-    fprintf (stderr,
-             "    -x, --max OPACITY    maximum possible opacity  (default = 1)\n");
-    fprintf (stderr,
-             "    -v, --verbose        print some debug info\n");
-    fprintf (stderr,
-             "    -V, --version        print version number\n");
+    fputs ("usage: transset [-options ...] [opacity]\n"
+           "options:\n"
+           "    -h, --help           display this message\n"
+           "    -t, --toggle         force toggle of opacity\n"
+           "    -c, --click          select by clicking on window  (default)\n"
+           "    -p, --point          select the window currently under the cursor\n"
+           "    -a, --actual         select the actual window\n"
+           "    -n, --name NAME      select by name, NAME is matched as regular expression\n"
+           "    --no-regex           don't use regular expression for matching name\n"
+           "    -i, --id             select by window id\n"
+           "        --inc            increase by the given opacity\n"
+           "        --dec            decrease by given opacity\n"
+           "    -m, --min OPACITY    minimum possible opacity  (default = 0)\n"
+           "    -x, --max OPACITY    maximum possible opacity  (default = 1)\n"
+           "    -v, --verbose        print some debug info\n"
+           "    -V, --version        print version number\n",
+        stderr);
 
     exit (1);
 }
@@ -140,7 +129,7 @@ main (int argc, char **argv)
     Bool flag_verbose = False;
     Bool flag_no_regex = False;
     int o;
-    float min = 0, max = 1;
+    double min = 0.0, max = 1.0;
     char *idstr = NULL, *namestr = NULL;
     char *windowname = NULL;
 
@@ -217,8 +206,8 @@ main (int argc, char **argv)
             max = atof (optarg);
             break;
         case 'V':
-            fprintf (stderr, "version: %s\nreleased: %s\n",
-                     VERSIONSTR, RELEASEDATESTR);
+            fprintf (stderr, "%s\nversion: %s\nreleased: %s\n",
+                     PACKAGE_STRING, VERSIONSTR, RELEASE_DATE);
             exit (1);
             break;
         default:
@@ -311,7 +300,7 @@ main (int argc, char **argv)
         XFree ((void *) data);
         if (flag_verbose)
             printf ("Found transparency: %g\n",
-                    (double) opacity / OPAQUE);
+                    (double) current_opacity / OPAQUE);
     } else
         current_opacity = OPAQUE;
 
@@ -328,7 +317,7 @@ main (int argc, char **argv)
 
     opacity = (unsigned int) (d * OPAQUE);
 
-    /* for user-compability with transset */
+    /* for user-compatibility with transset */
     if (!gotd)
         flag_toggle = True;
 
@@ -353,7 +342,7 @@ main (int argc, char **argv)
         printf ("\n");
 
     if (flag_verbose)
-        printf ("Propery set on: 0x%x\n", (unsigned int) target_win);
+        printf ("Property set on: 0x%x\n", (unsigned int) target_win);
 
     XCloseDisplay (dpy);
     return 0;

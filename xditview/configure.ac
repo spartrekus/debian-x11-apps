@@ -23,7 +23,7 @@ dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.60])
 AC_INIT([xditview],
-	[1.0.2],
+	[1.0.3],
 	[https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
 	[xditview])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
@@ -35,9 +35,8 @@ m4_ifndef([XORG_MACROS_VERSION],
 XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
 
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 
-AC_PROG_INSTALL
 
 AC_CHECK_FUNC([mkstemp], 
    AC_DEFINE(HAS_MKSTEMP,1,[Define to 1 if you have the "mkstemp" function.]))
@@ -48,10 +47,13 @@ PKG_CHECK_MODULES(XDITVIEW, xaw7 xmu xt x11)
 PKG_CHECK_MODULES(APPDEFS, xt)
 xt_appdefaultdir=`$PKG_CONFIG --variable=appdefaultdir xt`
 AC_ARG_WITH(appdefaultdir,
-	AC_HELP_STRING([--with-appdefaultdir=<pathname>],
+	AS_HELP_STRING([--with-appdefaultdir=<pathname>],
 	  [specify directory for app-defaults files (default is autodetected)]),
 	[appdefaultdir="$withval"], [appdefaultdir="${xt_appdefaultdir}"])
 AC_SUBST(appdefaultdir)
 
 
-AC_OUTPUT([Makefile])
+AC_CONFIG_FILES([
+	Makefile
+	man/Makefile])
+AC_OUTPUT

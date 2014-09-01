@@ -10,7 +10,7 @@ xditview \- display ditroff output
 [ \-\fItoolkitoption\fP .\|.\|. ] [ \-\fIoption\fP .\|.\|. ] [ \fIfilename\fP ]
 .SH DESCRIPTION
 The
-.I xditview 
+.I xditview
 program displays
 .I ditroff
 output on an X display.  It uses no special
@@ -30,7 +30,7 @@ to run the rest of the ``file name'' and uses the
 standard output of that command.
 .SH OPTIONS
 .I Xditview
-accepts all of the standard X Toolkit command line options along with the 
+accepts all of the standard X Toolkit command line options along with the
 additional options listed below:
 .TP 8
 .B \-page \fIpage-number\fP
@@ -49,15 +49,15 @@ per request.  This option suppresses the use of this feature in
 .B \-backingStore \fIbacking-store-type\fP
 Redisplay can take up to a second or so; this option causes
 the server to save the window contents so that when it is scrolled around the
-viewport, the window is painted from contents saved in backing store. 
+viewport, the window is painted from contents saved in backing store.
 \fIbacking-store-type\fP can be one of \fBAlways\fP, \fPWhenMapped\fP or
 \fPNotUseful\fP.
 .PP
-The following standard X Toolkit command line arguments are commonly used with 
+The following standard X Toolkit command line arguments are commonly used with
 .I xditview:
 .TP 8
 .B \-bg \fIcolor\fP
-This option specifies the color to use for the background of the window.  
+This option specifies the color to use for the background of the window.
 The default is \fIwhite\fP.
 .TP 8
 .B \-bd \fIcolor\fP
@@ -68,7 +68,7 @@ The default is \fIblack\fP.
 This option specifies the width in pixels of the border surrounding the window.
 .TP 8
 .B \-fg \fIcolor\fP
-This option specifies the color to use for displaying text.  The default is 
+This option specifies the color to use for displaying text.  The default is
 \fIblack\fP.
 .TP 8
 .B \-fn \fIfont\fP
@@ -153,18 +153,18 @@ accurately reflected on the screen; for servers which do not support scaled
 will use the closest font from the same family.
 .SH "SEE ALSO"
 .IR X (__miscmansuffix__),
-.IR xrdb (1),
-.IR ditroff (1),
+.IR xrdb (__appmansuffix__),
+.IR ditroff (__appmansuffix__),
 .I "X Logical Font Description Conventions"
 .SH ORIGIN
 Portions of this program originated in
 .I xtroff which was derived
 from
-.I suntroff.  
+.I suntroff.
 .SH COPYRIGHT
 Copyright 1994 X Consortium
 .br
-See \fIX\fP(1) for a full statement of rights and permissions.
+See \fIX\fP(__miscmansuffix__) for a full statement of rights and permissions.
 .SH AUTHORS
 Keith Packard (MIT X Consortium)
 .br

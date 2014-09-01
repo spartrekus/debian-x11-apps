@@ -1,3 +1,69 @@
+commit 23371e39e595056b3db2e361fad8a21ed4a0d9e7
+Author: Alan Coopersmith <alan.coopersmith@oracle.com>
+Date:   Sat Jan 12 16:36:26 2013 -0800
+
+    xditview 1.0.3
+    
+    Signed-off-by: Alan Coopersmith <alan.coopersmith@oracle.com>
+
+commit 257b2cdcaeb19a75b3e61e11a038244af89d3179
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jan 19 10:06:56 2011 -0500
+
+    config: move man pages into their own directory
+    
+    Use services provided by XORG_MANPAGE_SECTIONS.
+    Use standard Makefile for man pages.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit a81efa4ac87783a42ffb5f8099b05016903fb1a4
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Jan 13 17:15:36 2011 -0500
+
+    man: replace hard coded man page section with substitution strings
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit a274cf7cbf58d9e3b40c7146c191a63a995e9f2d
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Thu Jan 13 11:15:47 2011 -0500
+
+    man: remove trailing spaces and tabs
+    
+    Using s/[ \t]*$//
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit e65ffae36608a8c7d4cf24d6c1c1a686b70abc00
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jan 12 16:28:02 2011 -0500
+
+    config: replace deprecated AM_CONFIG_HEADER with AC_CONFIG_HEADERS
+    
+    This silences an Autoconf warning
+
+commit 78fe41b9f00cd8ad5ee8532ae70771b0e0fe6756
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jan 12 15:29:50 2011 -0500
+
+    config: replace deprecated AC_HELP_STRING with AS_HELP_STRING
+    
+    This silences an Automake warning.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
+commit 1616e2d2e5c632c7a175dee2b0ae4e2b737bb648
+Author: Gaetan Nadon <memsize@videotron.ca>
+Date:   Wed Jan 12 11:54:40 2011 -0500
+
+    config: use AC_PROG_INSTALL now supplied by XORG_DEFAULT_OPTIONS
+    
+    It depends on util-macros 1.8 or later
+    The existing statement can now be removed from the configuration file.
+    
+    Signed-off-by: Gaetan Nadon <memsize@videotron.ca>
+
 commit b05d3efcd5ecceb73edc9e64cc07a5c7fcfaa321
 Author: Alan Coopersmith <alan.coopersmith@oracle.com>
 Date:   Fri Aug 6 16:08:20 2010 -0700
