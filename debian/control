@@ -5,7 +5,7 @@ Maintainer: Debian X Strike Force <debian-x@lists.debian.org>
 Build-Depends:
  debhelper (>= 7.0.50),
  pkg-config,
- autotools-dev,
+ dh-autoreconf,
 # XXX bison build-dep is to work around a bug in xgc's configure, remove as
 # soon as that's fixed.
  bison,
@@ -24,6 +24,7 @@ Build-Depends:
  x11proto-core-dev (>= 7.0.17),
  quilt,
  xutils-dev (>= 1:7.5+4),
+ man-db,
 # Reasons for build-depends:
 # debhelper for the packaging, pkg-config needed by configure scripts
 # xutils-dev for xorg macros
@@ -46,7 +47,7 @@ Build-Depends:
 # xload: libxaw7-dev, libxt-dev
 # xlogo: libxaw7-dev, libxrender-dev, libxft-dev, libxext-dev, libxt-dev
 # xmag: libxaw7-dev, libxt-dev
-# xman: libxaw7-dev, libxt-dev
+# xman: libxaw7-dev, libxt-dev, man-db
 # xmore: libxaw7-dev, libxt-dev
 # xwd: libx11-dev, x11proto-core-dev
 # xwud: libx11-dev
@@ -56,7 +57,7 @@ Vcs-Browser: http://git.debian.org/?p=pkg-xorg/app/x11-apps.git
 
 Package: x11-apps
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, cpp
+Depends: ${shlibs:Depends}, ${misc:Depends}, cpp, man-db
 Recommends: xbitmaps
 Suggests: mesa-utils
 Conflicts: bitmap, oclock, x11perf, xbiff, xcalc, xclipboard, xclock, xconsole,

@@ -1,3 +1,12 @@
+x11-apps (7.7+4) unstable; urgency=medium
+
+  * Use man -l instead of trying to do man's job badly, and failing to find
+    zsoelim because it's been moved out of $PATH (closes: #764792).  Thanks to
+    Lee Cremeans for the report and to Colin Watson for suggesting a fix.
+  * Start using dh-autoreconf since we need to patch the build system.
+
+ -- Julien Cristau <jcristau@debian.org>  Sat, 08 Nov 2014 11:21:37 +0000
+
 x11-apps (7.7+3) unstable; urgency=medium
 
   * Delete debian/xsfbs/, not used anymore.

@@ -17,7 +17,11 @@ CONFIG_STAMPS = $(addprefix $(STAMP_DIR)/configure-, $(SUBDIRS))
 BUILD_STAMPS = $(addprefix $(STAMP_DIR)/build-,$(SUBDIRS))
 
 %:
-	dh $@ --with autotools-dev,quilt --parallel
+	dh $@ --with quilt,autoreconf --parallel
+
+override_dh_autoreconf:
+	chmod +x debian/autogen.sh
+	dh_autoreconf debian/autogen.sh -- $(SUBDIRS)
 
 override_dh_auto_configure: $(CONFIG_STAMPS)
 
